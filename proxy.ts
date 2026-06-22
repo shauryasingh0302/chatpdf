@@ -3,7 +3,8 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 // export default clerkMiddleware();
 
 const isProtectedRoute = createRouteMatcher([
-  "/((?!$).*)", // Matches everything except "/"
+  "/dashboard(.*)",
+  "/chat(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
