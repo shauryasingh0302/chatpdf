@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
+import Providers from "@/components/Providers";
+import {Toaster} from 'react-hot-toast'
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -31,6 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+      <Providers>
       <html
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.className} h-full antialiased`}
@@ -38,7 +41,9 @@ export default function RootLayout({
         <body className="min-h-full flex flex-col items-start">
           {children}
         </body>
+        <Toaster/>
       </html>
+      </Providers>
     </ClerkProvider>
     
   );
