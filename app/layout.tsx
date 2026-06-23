@@ -32,19 +32,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <Providers>
-      <html
-        lang="en"
-        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.className} h-full antialiased`}
-      >
-        <body className="min-h-full flex flex-col items-start">
-          {children}
-        </body>
-        <Toaster/>
-      </html>
-      </Providers>
-    </ClerkProvider>
-    
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${montserrat.className} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col items-start">
+        <ClerkProvider>
+          <Providers>
+            {children}
+            <Toaster />
+          </Providers>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
