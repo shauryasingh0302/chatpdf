@@ -1,5 +1,4 @@
 import Groq from "groq-sdk";
-import { UIMessage } from "ai";
 import { getContext } from "@/lib/context";
 import { db } from "@/lib/db";
 import { chats, messages as _messages } from "@/lib/db/schema";
@@ -19,8 +18,7 @@ export async function POST(req: Request) {
     }
     const fileKey = _chats[0].fileKey;
     const lastMessage = messages[messages.length - 1];
-    console.log("lastMessage", lastMessage);
-    const lastMessageText = lastMessage.content ?? lastMessage.parts?.[0]?.text ?? "";
+    const lastMessageText = lastMessage.content ?? "";
 
     const context = await getContext(lastMessageText, fileKey);
     const prompt = {
@@ -52,10 +50,10 @@ export async function POST(req: Request) {
       messages: [
         prompt,
         ...messages
-          .filter((message: UIMessage) => message.role === "user")
-          .map((message: UIMessage) => ({
+          .filter((message: any) => message.role === "user")
+          .map((message: any) => ({
             role: message.role,
-            content: (message as any).parts?.[0]?.text ?? (message as any).content ?? "",
+            content: message.content ?? "",
           })),
       ],
       stream: true,
@@ -69,7 +67,7 @@ export async function POST(req: Request) {
           const text = chunk.choices[0]?.delta?.content || "";
           if (text) {
             completion += text;
-            controller.enqueue(encoder.encode(`0:${JSON.stringify(text)}\n`));
+            controller.enqueue(encoder.encode(text));
           }
         }
         await db.insert(_messages).values({
@@ -82,11 +80,7 @@ export async function POST(req: Request) {
     });
 
     return new Response(stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
-      },
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (error) {
     console.error(error);
