@@ -13,7 +13,9 @@ type Message = {
     content: string;
 };
 
-type Props = { chatId: number };
+type Props = {
+    chatId: number;
+};
 
 const ChatComponent = ({ chatId }: Props) => {
     const [input, setInput] = useState("");
@@ -24,19 +26,23 @@ const ChatComponent = ({ chatId }: Props) => {
     useEffect(() => {
         const loadMessages = async () => {
             const { data } = await axios.post("/api/get-messages", { chatId });
+
             const loaded = data.map((m: any) => ({
                 id: m.id.toString(),
                 role: m.role === "system" ? "assistant" : m.role,
                 content: m.content,
             }));
+
             setMessages(loaded);
             setIsLoadingMessages(false);
         };
+
         loadMessages();
     }, [chatId]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
         if (!input.trim()) return;
 
         const userMessage: Message = {
@@ -44,13 +50,16 @@ const ChatComponent = ({ chatId }: Props) => {
             role: "user",
             content: input,
         };
+
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
         setIsLoading(true);
 
         const response = await fetch("/api/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 messages: [...messages, userMessage],
                 chatId,
@@ -58,23 +67,38 @@ const ChatComponent = ({ chatId }: Props) => {
         });
 
         const reader = response.body!.getReader();
+
         const decoder = new TextDecoder();
+
         let aiText = "";
+
         const aiId = Date.now().toString() + "-ai";
 
         setMessages((prev) => [
             ...prev,
-            { id: aiId, role: "assistant", content: "" },
+            {
+                id: aiId,
+                role: "assistant",
+                content: "",
+            },
         ]);
 
         while (true) {
             const { done, value } = await reader.read();
+
             if (done) break;
+
             aiText += decoder.decode(value, { stream: true });
+
             setMessages((prev) =>
                 prev.map((m) =>
-                    m.id === aiId ? { ...m, content: aiText } : m,
-                ),
+                    m.id === aiId
+                        ? {
+                              ...m,
+                              content: aiText,
+                          }
+                        : m
+                )
             );
         }
 
@@ -82,53 +106,83 @@ const ChatComponent = ({ chatId }: Props) => {
     };
 
     useEffect(() => {
-        const messageContainer = document.getElementById("message-container");
-        if (messageContainer) {
-            messageContainer.scrollTo({
-                top: messageContainer.scrollHeight,
+        const container = document.getElementById("message-container");
+
+        if (container) {
+            container.scrollTo({
+                top: container.scrollHeight,
                 behavior: "smooth",
             });
         }
     }, [messages]);
 
     return (
-        <div className="flex h-full flex-col">
-            <div className="sticky top-0 z-10 border-b bg-white p-4">
-                <h3 className="text-xl font-bold">Chat</h3>
-            </div>
+        <div className="flex h-full flex-col bg-white">
 
-            {isLoadingMessages ? (
-                <div className="flex flex-col items-center justify-center h-full mt-10">
-                    <Loader2 className="h-8 w-8 animate-spin text-black" />
-                    <p className="mt-2 text-sm text-slate-400">
-                        Loading messages...
+            {/* Header */}
+
+            <div className="sticky top-0 z-20 border-b border-gray-200 bg-white/90 backdrop-blur-md">
+                <div className="px-6 py-5">
+                    <h2 className="text-lg font-semibold text-gray-900">
+                        AI Assistant
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                        Ask anything about your PDF
                     </p>
                 </div>
-            ) : (
-                <div
-                    id="message-container"
-                    className="flex-1 overflow-y-auto px-2"
-                >
-                    <MessageList messages={messages} />
-                </div>
-            )}
+            </div>
 
-            <form
-                onSubmit={handleSubmit}
-                className="border-t bg-white p-4"
+            {/* Messages */}
+
+            <div
+                id="message-container"
+                className="flex-1 overflow-y-auto px-6 py-8"
             >
-                <div className="flex">
+                {isLoadingMessages ? (
+                    <div className="flex h-full flex-col items-center justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-black" />
+
+                        <p className="mt-4 text-sm text-gray-500">
+                            Loading conversation...
+                        </p>
+                    </div>
+                ) : (
+                    <MessageList messages={messages} />
+                )}
+            </div>
+
+            {/* Input */}
+
+            <div className="border-t border-gray-200 bg-white px-5 py-5">
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex items-center gap-3 rounded-2xl border border-gray-400 bg-white p-2 shadow-sm transition focus-within:border-black"
+                >
                     <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask a question..."
-                        className="w-full"
+                        placeholder="Ask anything about your PDF..."
+                        className="border-none bg-transparent shadow-none focus-visible:ring-0"
                     />
-                    <Button className="ml-2 bg-black hover:bg-gray-900" disabled={isLoading}>
-                        <Send className="h-4 w-4" />
+
+                    <Button
+                        disabled={isLoading}
+                        className="h-11 w-11 rounded-xl bg-gray-800 p-0 hover:bg-black text-white"
+                    >
+                        {isLoading ? (
+                            <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        ) : (
+                            <Send className="h-4 w-4 text-white" />
+                        )}
                     </Button>
-                </div>
-            </form>
+                </form>
+
+                <p className="mt-3 text-center text-xs text-gray-500">
+                    AI may occasionally make mistakes. Verify important information.
+                </p>
+            </div>
         </div>
     );
 };
