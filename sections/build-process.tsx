@@ -9,9 +9,9 @@ type Step = {
 
 const leftSteps: Step[] = [
     {
-        title: "Upload Your PDF",
+        title: "Ask Anything",
         description:
-            "Upload any PDF including research papers, lecture notes, books, reports, or technical documents. Our AI securely processes your file and prepares it for intelligent conversations.",
+            "Chat naturally with your document. Ask questions, clarify concepts, locate information, or request explanations based entirely on your uploaded PDF.",
     },
     {
         title: "Learn Faster",
@@ -22,9 +22,9 @@ const leftSteps: Step[] = [
 
 const rightSteps: Step[] = [
     {
-        title: "Ask Anything",
+        title: "Upload Your PDF",
         description:
-            "Chat naturally with your document. Ask questions, clarify concepts, locate information, or request explanations based entirely on your uploaded PDF.",
+            "Upload any PDF including research papers, lecture notes, books, reports, or technical documents. Our AI securely processes your file and prepares it for intelligent conversations.",
     },
     {
         title: "Get Accurate Answers",
