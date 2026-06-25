@@ -129,8 +129,12 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
+    @apply bg-white text-gray-800 text-sm antialiased;
   }
   html {
     font-family: var(--font-sans);
+  }
+  button {
+    @apply cursor-pointer;
   }
 }
