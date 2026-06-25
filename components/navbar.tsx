@@ -57,7 +57,13 @@ export default function Navbar() {
                         />
                     </a>
 
-                    
+                    <div className="hidden md:flex items-center gap-8 text-gray-600">
+                        {navLinks.map((link) => (
+                            <Link key={link.name} href={link.href} className="hover:text-black">
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
 
                     <div className="hidden md:flex items-center gap-3">
                         {isSignedIn ? (
