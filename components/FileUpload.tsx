@@ -61,27 +61,35 @@ const FileUpload = (props: any) => {
 
         }
     })
-  return (
-    <div className="p-2 bg-white rounded-xl">
-        <div {...getRootProps({
-            className: 'border-dashed border-2 rounded-xl cursor-pointer bg-gray-50 py-8 flex justify-center items-center flex-col'
-        })}>
+return (
+    <div className="w-full max-w-xl">
+        <div
+            {...getRootProps({
+                className:
+                    "border-2 border-dashed border-gray-400 hover:border-black rounded-2xl bg-white px-10 py-10 cursor-pointer transition-all duration-200 flex items-center justify-center",
+            })}
+        >
             <input {...getInputProps()} />
-            {(uploading || mutation.isPending) ? (
-                <>
-                    <Loader2 className="h-10 w-10 text-blue-500 animate-spin"/>
-                    <p className="mt-2 text-sm text-slate-400">Spilling Tea to GPT...</p>
-                </>
-            ):(
-                <>
-                    <Inbox className="w-10 h-10 text-blue-500"/>
-                    <p className="mt-2 text-sm text-slate-400">Drop PDF here</p>
-                </>
+
+            {uploading || mutation.isPending ? (
+                <div className="flex flex-col items-center">
+                    <Loader2 className="h-10 w-10 animate-spin" />
+                    <p className="mt-2 text-sm text-gray-500">
+                        Spilling Tea to GPT...
+                    </p>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center">
+                    <Inbox className="w-10 h-10" />
+                    <p className="mt-2 text-sm text-gray-500">
+                        Drop PDF here
+                    </p>
+                </div>
             )}
-            
         </div>
     </div>
-  )
+);
+
 }
 
 export default FileUpload
