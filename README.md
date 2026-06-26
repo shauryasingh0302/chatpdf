@@ -1,36 +1,338 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ChatPDF
 
-## Getting Started
+ChatPDF is a full-stack AI-powered document chat application that allows users to upload PDF documents and interact with them through natural language conversations. Using Retrieval-Augmented Generation (RAG), the application retrieves the most relevant document context and generates accurate responses with modern large language models.
 
-First, run the development server:
+The project is built with Next.js, LangChain, Pinecone, Supabase, Clerk Authentication, Drizzle ORM, Stripe, and Google's Gemini models to provide a scalable and production-ready AI experience.
+
+---
+
+## Features
+
+### AI-Powered PDF Conversations
+
+* Upload PDF documents
+* Ask questions in natural language
+* Context-aware AI responses
+* Retrieval-Augmented Generation (RAG)
+
+### Authentication
+
+* Clerk authentication
+* Secure sign in and sign up
+* User-specific chat history
+
+### PDF Management
+
+* Drag-and-drop uploads
+* Cloud storage with Supabase
+* Document viewer
+* Multiple chat sessions
+
+### Vector Search
+
+* Automatic document chunking
+* Embedding generation
+* Pinecone vector database
+* Semantic similarity search
+
+### Subscription System
+
+* Stripe Checkout integration
+* Free and Pro plans
+* Subscription management
+* Premium feature access
+
+### Modern UI
+
+* Responsive design
+* Landing page
+* Chat interface
+* Pricing page
+* Dashboard
+* Smooth animations
+
+---
+
+# Tech Stack
+
+## Frontend
+
+* Next.js 16
+* React 19
+* TypeScript
+* Tailwind CSS
+* Shadcn UI
+* React Query
+* Axios
+* Lucide Icons
+
+## Backend
+
+* Next.js App Router
+* Server Actions
+* Route Handlers
+
+## AI
+
+* Google Gemini
+* LangChain
+* AI SDK
+* Groq SDK
+
+## Database
+
+* Neon PostgreSQL
+* Drizzle ORM
+
+## Vector Database
+
+* Pinecone
+
+## Authentication
+
+* Clerk
+
+## Storage
+
+* Supabase Storage
+
+## Payments
+
+* Stripe
+
+---
+
+# Architecture
+
+```
+                User
+                  │
+                  ▼
+         Next.js Frontend
+                  │
+      ┌───────────┼───────────┐
+      │           │           │
+      ▼           ▼           ▼
+   Clerk      Supabase     Stripe
+      │           │
+      │           ▼
+      │      PDF Storage
+      │
+      ▼
+ Next.js API Routes
+      │
+      ▼
+ PDF Processing
+      │
+      ▼
+ Document Chunking
+      │
+      ▼
+ Embedding Generation
+      │
+      ▼
+ Pinecone Vector Store
+      │
+      ▼
+ Relevant Context
+      │
+      ▼
+ Google Gemini
+      │
+      ▼
+ AI Response
+```
+
+---
+
+# Project Structure
+
+```
+chatpdf/
+│
+├── app/
+│   ├── api/
+│   ├── chat/
+│   ├── checkout/
+│   ├── pricing/
+│   └── sign-in/
+│
+├── components/
+│   ├── ChatComponent
+│   ├── ChatSidebar
+│   ├── FileUpload
+│   ├── PDFViewer
+│   └── MessageList
+│
+├── sections/
+│   ├── Hero
+│   ├── Features
+│   ├── Pricing
+│   ├── Testimonials
+│   └── CTA
+│
+├── lib/
+│   ├── embeddings
+│   ├── pinecone
+│   ├── stripe
+│   ├── subscription
+│   └── db
+│
+├── public/
+└── package.json
+```
+
+---
+
+# Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/your-username/chatpdf.git
+```
+
+Move into the project
+
+```bash
+cd chatpdf
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env.local` file.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+CLERK_SECRET_KEY=
 
-## Deploy on Vercel
+NEXT_PUBLIC_SUPABASE_URL=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+DATABASE_URL=
+
+PINECONE_API_KEY=
+
+GOOGLE_API_KEY=
+
+OPENAI_API_KEY=
+
+GROQ_API_KEY=
+
+STRIPE_API_KEY=
+
+STRIPE_WEBHOOK_SECRET=
+
+NEXT_PUBLIC_APP_URL=
+```
+
+---
+
+# How It Works
+
+1. User uploads a PDF.
+2. The file is stored in Supabase Storage.
+3. The document is parsed and divided into smaller chunks.
+4. Each chunk is converted into embeddings.
+5. Embeddings are stored in Pinecone.
+6. User submits a question.
+7. Similar document chunks are retrieved.
+8. Relevant context is sent to the language model.
+9. The AI generates an accurate answer based on the uploaded document.
+
+---
+
+# Subscription Plans
+
+## Free
+
+* Upload up to 3 PDFs
+* Basic AI chat
+* 10 MB upload limit
+* Standard response speed
+
+## Pro
+
+* Unlimited PDF uploads
+* Unlimited AI conversations
+* Larger upload limits
+* Priority AI responses
+* Latest AI models
+* Priority support
+
+---
+
+# Future Improvements
+
+* OCR support for scanned PDFs
+* Multi-document conversations
+* PDF annotations
+* Chat export
+* Team workspaces
+* Shared documents
+* Streaming AI responses
+* Conversation search
+* Mobile optimization
+* Usage analytics
+
+---
+
+# Scripts
+
+```bash
+npm run dev
+```
+
+Runs the development server.
+
+```bash
+npm run build
+```
+
+Creates a production build.
+
+```bash
+npm start
+```
+
+Starts the production server.
+
+```bash
+npm run lint
+```
+
+Runs ESLint.
+
+---
+
+# License
+
+This project is intended for educational and portfolio purposes. You may modify and extend it according to your requirements.
+
+---
+
+# Author
+
+**Shaurya Singh**
