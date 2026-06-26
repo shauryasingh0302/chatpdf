@@ -24,7 +24,7 @@ const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
                     <ArrowLeft className="h-4 w-4" />
                     Home
                 </Link>
-                <Link href="/">
+                <Link href="/?upload=true">
                     <Button className="w-full gap-2 rounded-xl bg-gray-800 text-white hover:bg-black">
                         <PlusCircle className="h-4 w-4" />
                         New Chat
